@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
+import { useGetProjectsQuery } from "@/state/api";
 import {
   AlertCircle,
   AlertOctagon,
@@ -29,18 +30,19 @@ const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
+  const { data: projects } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
   const isSideBarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
 
-  const sidebarClassNames = `fixed flex flex-col h-[100%] justify-btween sshadow-xl transition-all 
+  const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl transition-all
         duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white
         ${isSideBarCollapsed ? "w-0 hidden" : "w-64"}`;
 
   return (
     <div className={sidebarClassNames}>
-      <div className="justfiy-start flex h-[100%] w-full flex-col">
+      <div className="flex h-[100%] w-full flex-col justify-start">
         {/* TOP LOGO */}
         <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
           <div className="text-xl font-bold text-gray-800 dark:text-white">
@@ -53,7 +55,7 @@ const Sidebar = () => {
                 dispatch(setIsSidebarCollapsed(!isSideBarCollapsed));
               }}
             >
-              <X className="h-6 w-6 text-gray-600 hover:text-gray-500 dark:text-white" />
+              <X className="h-6 w-6 text-gray-800 hover:text-gray-500 dark:text-white" />
             </button>
           )}
         </div>
@@ -66,7 +68,7 @@ const Sidebar = () => {
               <h3 className="text-md font-bold tracking-wide dark:text-gray-200">
                 YOUR TEAM
               </h3>
-              <div className="nt-1 flex items-start gap-2">
+              <div className="mt-1 flex items-start gap-2">
                 <LockIcon className="mt-[0.1rem] h-3 w-3 text-gray-500 dark:text-gray-400" />
                 <p className="text-xs text-gray-500">Private</p>
               </div>
@@ -94,6 +96,17 @@ const Sidebar = () => {
             )}
           </button>
           {/* PROJECTS LISTS */}
+
+          {showProjects &&
+            projects?.map((project) => (
+              <SidebarLink
+                key={project.id}
+                icon={Briefcase}
+                label={project.name}
+                href={`/projects/${project.id}`}
+              />
+            ))}
+
           {/* PRIORITIES LINKS */}
 
           <button
