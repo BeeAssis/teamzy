@@ -6,9 +6,15 @@ applications:
       phases:
         preBuild:
           commands:
+            - echo "CWD=$(pwd)"
+            - ls -la
+            - test -f package.json && echo "PACKAGE FOUND" || (echo "NO PACKAGE" && exit 1)
+            - test -f package-lock.json && echo "LOCKFILE FOUND" || (echo "NO LOCKFILE" && exit 1)
             - nvm install 20
             - nvm use 20
-            - npm ci
+            - node -v
+            - npm -v
+            - npm ci || (echo "npm ci failed — falling back to npm install" && npm install --no-audit --no-fund)
         build:
           commands:
             - npm run build
