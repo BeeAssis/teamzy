@@ -12,6 +12,8 @@ import taskRoutes from "./routes/taskRoutes";
 import teamRoutes from "./routes/teamRoutes";
 import userRoutes from "./routes/userRoutes";
 
+import { PrismaClient } from "@prisma/client";
+
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
@@ -34,6 +36,8 @@ app.use("/tasks", taskRoutes);
 app.use("/search", searchRoutes);
 app.use("/users", userRoutes);
 app.use("/teams", teamRoutes);
+
+const prisma = new PrismaClient();
 
 /* SERVER */
 
